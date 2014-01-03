@@ -69,7 +69,7 @@ namespace DNDClone
             }
             else
             {
-                mInfo = "No monster currently\nbeing fought.";
+                mInfo = "";
             }
             labelMonsterInfo.Text = mInfo;
             //Best place to toggle the generate monster button as display stats is called very often.
@@ -145,7 +145,7 @@ namespace DNDClone
         private void toolStripLoadGame_Click(object sender, EventArgs e)
         {
             //Character currently exists if name is longer than 0 characters
-            if (p.Name.Length > 0)
+            if (p.Name.Length > 0 && p.CurrentHealth > 0)
             {
                 //Ask player if they'd like to save
                 DialogResult result = MessageBox.Show("Would you like to save your current character\nbefore loading another?", "Save?", MessageBoxButtons.YesNo);
@@ -441,7 +441,13 @@ namespace DNDClone
                     p.CurrentHealth -= CombatDice.Next(monsterCBValue - 6, monsterCBValue + 2);
                     if (p.CurrentHealth <= 0)
                     {
-                        //Delete character, since it's permadeath?
+                        this.toolStripSaveGame.Enabled = false;
+                        labelFloorText.Text = "You were unsuccesful in your quest to slay Engor. Your character has been killed, good luck on your next adventure.";
+                        string path = Environment.CurrentDirectory + @"\" + p.Name + ".dnd";
+                        if (File.Exists(path))
+                        {
+                            File.Delete(path);
+                        }
                     }
                 }
                 else
@@ -467,7 +473,7 @@ namespace DNDClone
                         p.CurrentExp += m.Experience;
                         r.MonsterCount--;
                         ToggleButtons(true);
-                        if (r.RoomCount == 12)
+                        if (r.RoomCount == 12) //If this is the boss room and an enemy has just been slain then it was the boss, end game time.
                         {
                             //Player has won the game, congratulate them
                             FinishGame();
@@ -476,7 +482,13 @@ namespace DNDClone
                 }
                 else
                 {
-                    //Delete character, since it's permadeath?
+                    this.toolStripSaveGame.Enabled = false;
+                    labelFloorText.Text = "You were unsuccesful in your quest to slay Engor. Your character has been killed, good luck on your next adventure.";
+                    string path = Environment.CurrentDirectory + @"\" + p.Name + ".dnd";
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
                 }
             }
             displayStats();
