@@ -80,12 +80,12 @@ namespace DNDClone
         public void GenerateBoss(int pLevel, int pMaxHealth, int pStrength, int pWisdom)
         {
             this.Name = "Engor";
-            this.Level = pLevel + 2;
+            this.Level = pLevel;
             this.Experience = 1337;
             this.MaxHealth = pMaxHealth;
             this.CurrentHealth = pMaxHealth;
-            this.Strength = pStrength + 5;
-            this.Wisdom = pWisdom + 5;
+            this.Strength = pStrength;
+            this.Wisdom = pWisdom;
         }
     }
 }

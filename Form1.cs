@@ -69,7 +69,7 @@ namespace DNDClone
             }
             else
             {
-                mInfo = "No monster currently\nbeing fought.";
+                mInfo = "";
             }
             labelMonsterInfo.Text = mInfo;
             //Best place to toggle the generate monster button as display stats is called very often.
