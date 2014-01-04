@@ -28,6 +28,7 @@ namespace DNDClone
             this.Wisdom = 10;
             this.StrengthPots = 0;
             this.WisdomPots = 0;
+            this.FoodCount = 0;
         }
 
         public int Level

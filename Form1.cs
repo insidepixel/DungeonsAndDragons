@@ -69,7 +69,7 @@ namespace DNDClone
             }
             else
             {
-                mInfo = "";
+                mInfo = "No monster currently\nbeing fought.";
             }
             labelMonsterInfo.Text = mInfo;
             //Best place to toggle the generate monster button as display stats is called very often.
@@ -124,17 +124,13 @@ namespace DNDClone
     (this.Location.X + dialog.Width + 20) - (dialog.Width),
     (this.Location.Y + dialog.Height + 20) - (dialog.Height));
             dialog.ShowDialog();
-
-            if (dialog.DialogResult == DialogResult.OK)
-            {
-                p.Name = dialog.getText();
-                dialog.Dispose();
-                ToggleButtons(true);
-                toolStripSaveGame.Enabled = true;
-                r.RoomCount = 0;
-                r.MakeNextRoom();
-                displayStats(); 
-            }
+            p.Name = dialog.getText();
+            dialog.Dispose();
+            ToggleButtons(true);
+            toolStripSaveGame.Enabled = true;
+            r.RoomCount = 0;
+            NewRoom();
+            displayStats();
         }
 
         private void toolStripSaveGame_Click(object sender, EventArgs e)
@@ -145,7 +141,7 @@ namespace DNDClone
         private void toolStripLoadGame_Click(object sender, EventArgs e)
         {
             //Character currently exists if name is longer than 0 characters
-            if (p.Name.Length > 0 && p.CurrentHealth > 0)
+            if (p.Name.Length > 0)
             {
                 //Ask player if they'd like to save
                 DialogResult result = MessageBox.Show("Would you like to save your current character\nbefore loading another?", "Save?", MessageBoxButtons.YesNo);
@@ -338,7 +334,7 @@ namespace DNDClone
             }
             int chance = SearchRoll.Next(1,101);
             MessageBox.Show("Player has value " + searchValue + " and the roll was " + chance);
-            if (chance <= searchValue)
+            if (searchValue >= chance)
             {
                 switch (pot)
                 {
@@ -435,14 +431,16 @@ namespace DNDClone
             int monsterCBValue = m.Level + m.Strength;
             if (p.Level >= m.Level)
             {
-                m.CurrentHealth -= CombatDice.Next(playerCBValue - 3, playerCBValue + 4);
+                m.CurrentHealth -= CombatDice.Next(playerCBValue - 2, playerCBValue + 7);
                 if (m.CurrentHealth > 0)
                 {
                     p.CurrentHealth -= CombatDice.Next(monsterCBValue - 6, monsterCBValue + 2);
                     if (p.CurrentHealth <= 0)
                     {
-                        this.toolStripSaveGame.Enabled = false;
-                        labelFloorText.Text = "You were unsuccesful in your quest to slay Engor. Your character has been killed, good luck on your next adventure.";
+                        labelFloorText.Text = "You were slain in your quest to defeat Engor, your hero has died. Start again by selecting New Game.";
+                        ToggleButtons(false);
+                        buttonAttack.Enabled = false;
+                        toolStripSaveGame.Enabled = false;
                         string path = Environment.CurrentDirectory + @"\" + p.Name + ".dnd";
                         if (File.Exists(path))
                         {
@@ -467,13 +465,13 @@ namespace DNDClone
                 p.CurrentHealth -= CombatDice.Next(monsterCBValue - 6, monsterCBValue + 2);
                 if (p.CurrentHealth > 0)
                 {
-                    m.CurrentHealth -= CombatDice.Next(playerCBValue - 3, playerCBValue + 4);
+                    m.CurrentHealth -= CombatDice.Next(playerCBValue - 2, playerCBValue + 7);
                     if (m.CurrentHealth <= 0)
                     {
                         p.CurrentExp += m.Experience;
                         r.MonsterCount--;
                         ToggleButtons(true);
-                        if (r.RoomCount == 12) //If this is the boss room and an enemy has just been slain then it was the boss, end game time.
+                        if (r.RoomCount == 12)
                         {
                             //Player has won the game, congratulate them
                             FinishGame();
@@ -482,8 +480,10 @@ namespace DNDClone
                 }
                 else
                 {
-                    this.toolStripSaveGame.Enabled = false;
-                    labelFloorText.Text = "You were unsuccesful in your quest to slay Engor. Your character has been killed, good luck on your next adventure.";
+                    labelFloorText.Text = "You were slain in your quest to defeat Engor, your hero has died. Start again by selecting New Game.";
+                    ToggleButtons(false);
+                    buttonAttack.Enabled = false;
+                    toolStripSaveGame.Enabled = false;
                     string path = Environment.CurrentDirectory + @"\" + p.Name + ".dnd";
                     if (File.Exists(path))
                     {
@@ -493,6 +493,7 @@ namespace DNDClone
             }
             displayStats();
         }
+
         void FinishGame()
         {
             ToggleButtons(false);

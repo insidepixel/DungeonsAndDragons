@@ -18,36 +18,46 @@ namespace DNDClone
 
         public string getText()
         {
-            //First check that the textbox input is not blank or made of just spaces
-            if (!string.IsNullOrWhiteSpace(txtInput.Text))
+
+            if (this.DialogResult == DialogResult.OK)
             {
-                //Replace non alphanumeric characters with nothing and turn to a char array so we can modify each letter seperately
-                Char[] NameArray = txtInput.Text.Where(c => (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))).ToArray();
-                if (NameArray.Length > 0)
+                //First check that the textbox input is not blank or made of just spaces
+                if (!string.IsNullOrWhiteSpace(txtInput.Text))
                 {
-                    //Make the first letter uppercase
-                    NameArray[0] = Char.ToUpper(NameArray[0]);
-                    //Make the rest lower case
-                    for (int i = 1; i < NameArray.Length; i++)
+                    //Replace non alphanumeric characters with nothing and turn to a char array so we can modify each letter seperately
+                    Char[] NameArray = txtInput.Text.Where(c => (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))).ToArray();
+                    if (NameArray.Length > 0)
                     {
-                        if (NameArray[i - 1] == Convert.ToChar(" "))
+                        //Make the first letter uppercase
+                        NameArray[0] = Char.ToUpper(NameArray[0]);
+                        //Make the rest lower case
+                        for (int i = 1; i < NameArray.Length; i++)
                         {
-                            NameArray[i] = Char.ToUpper(NameArray[i]);
+                            if (NameArray[i - 1] == Convert.ToChar(" "))
+                            {
+                                NameArray[i] = Char.ToUpper(NameArray[i]);
+                            }
+                            else
+                            {
+                                NameArray[i] = Char.ToLower(NameArray[i]);
+                            }
                         }
-                        else
-                        {
-                            NameArray[i] = Char.ToLower(NameArray[i]);
-                        }
+                        //Put the char array back together in to a string and send it back to Form1
+                        return new string(NameArray);
                     }
-                    //Put the char array back together in to a string and send it back to Form1
-                    return new string(NameArray);
+                    //The array was empty, player probably only entered punctuation which was all removed
+                    else
+                    {
+                        return "Adventurer";
+                    }
                 }
+                //The input string was empty or only contained spaces, return a default name instead
                 else
                 {
                     return "Adventurer";
                 }
             }
-            //The string was empty or only contained spaces, return a default name instead
+            //Dialog box was cancelled or closed
             else
             {
                 return "Adventurer";

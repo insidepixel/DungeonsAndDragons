@@ -65,7 +65,7 @@ namespace DNDClone
                 this.StrengthCount = 0;
                 this.WisdomCount = 0;
                 this.FoodCount = 0;
-                this.Light = 7;
+                this.Light = 0;
             }
         }
 
@@ -88,7 +88,7 @@ namespace DNDClone
                     FloorString += ("You confidently charge through the corridor and on to your next room. You come to a halt to take in your surroundings. You are shocked to find ");
                     break;
                 default:
-                    FloorString += ("Error in display text ");
+                    FloorString += ("Hurf durf durf derp derr. Herp derf durr ");
                     break;
             }
             switch (this.Light)
@@ -106,7 +106,7 @@ namespace DNDClone
                     FloorString += ("you can see the entire room in perfect detail. Navigating this room will be child's play. ");
                     break;
                 default:
-                    FloorString += ("Error in display light text ");
+                    FloorString += ("derf durka hurf durr derp. ");
                     break;
             }
             switch (this.MonsterCount)
@@ -122,7 +122,7 @@ namespace DNDClone
                     FloorString += ("You hear the sounds of multiple enemies, this may prove to be a challenge.");
                     break;
                 default:
-                    FloorString += ("Error in display monster text.");
+                    FloorString += ("aerthaw4sdtyfhjbr");
                     break;
             }
             return(FloorString);
